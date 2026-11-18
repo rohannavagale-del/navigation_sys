@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ArrowRight, MapPin, Sparkles } from "lucide-react";
+import { ArrowRight, MapPin, Sparkles, Lock, Unlock } from "lucide-react";
 
 const DEFAULT_VIDEO = "https://cdn.21st.dev/assets/mirror/21/21a77eac28eacbb7e142016eefeaa0b4a766619e51113629a3bc6df6af066c0f.mp4";
 const DEFAULT_SIGNATURE = { name: "MIT ADT Campus Navigation", url: "#" };
@@ -15,7 +15,7 @@ function clamp(v, min, max) {
 export default function MetroHero({
   videoSrc = DEFAULT_VIDEO,
   title = "MIT ADT CAMPUS GATE",
-  scrollHint = "SCROLL TO OPEN GATE",
+  scrollHint = "SCROLL OR CLICK TO OPEN GATE",
   tagline = "Welcome to MIT ADT University",
   signature = DEFAULT_SIGNATURE,
   scrubDistance = 2400,
@@ -24,79 +24,48 @@ export default function MetroHero({
   onComplete,
 }) {
   const sectionRef = useRef(null);
-  const videoRef = useRef(null);
+  const leftGateRef = useRef(null);
+  const rightGateRef = useRef(null);
+  const campusInnerRef = useRef(null);
+  const latchRef = useRef(null);
   const titleRef = useRef(null);
   const hintRef = useRef(null);
   const taglineRef = useRef(null);
   const progressBarRef = useRef(null);
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(true);
   const [isOpening, setIsOpening] = useState(false);
   const isAutoOpeningRef = useRef(false);
+  const triggerAutoOpenRef = useRef(null);
 
   const handleEnterClick = () => {
     setIsOpening(true);
-    isAutoOpeningRef.current = true;
+    if (triggerAutoOpenRef.current) {
+      triggerAutoOpenRef.current();
+    } else {
+      isAutoOpeningRef.current = true;
+    }
   };
 
   useEffect(() => {
-    const video = videoRef.current;
     const section = sectionRef.current;
-    if (!video || !section) return;
+    if (!section) return;
+
+    triggerAutoOpenRef.current = () => {
+      isAutoOpeningRef.current = true;
+    };
 
     const reduceMotion =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
-    let duration = 0;
     let rafId = 0;
     let targetProgress = 0;
     let currentProgress = 0;
     let hasStartedScrolling = false;
-    let isSeeking = false;
-    let pendingTime = null;
     let locked = false;
     let lockedScrollY = 0;
     let touchStartY = 0;
     let completedTriggered = false;
-
-    const onLoadedData = () => {
-      duration = video.duration || 0;
-      setReady(true);
-      if (reduceMotion) {
-        video.currentTime = duration * 0.92;
-      }
-    };
-    video.addEventListener("loadeddata", onLoadedData);
-
-    const kickstartLoad = () => {
-      const p = video.play();
-      if (p && typeof p.then === "function") {
-        p.then(() => video.pause()).catch(() => {});
-      } else {
-        video.pause();
-      }
-    };
-    kickstartLoad();
-
-    const onSeeked = () => {
-      isSeeking = false;
-      if (pendingTime !== null) {
-        const t = pendingTime;
-        pendingTime = null;
-        isSeeking = true;
-        video.currentTime = t;
-      }
-    };
-    video.addEventListener("seeked", onSeeked);
-
-    function seekTo(t) {
-      if (isSeeking) {
-        pendingTime = t;
-        return;
-      }
-      isSeeking = true;
-      video.currentTime = t;
-    }
 
     function engageLock() {
       if (locked || typeof document === "undefined") return;
@@ -161,31 +130,47 @@ export default function MetroHero({
 
     function frame() {
       if (isAutoOpeningRef.current) {
-        targetProgress = Math.min(1, targetProgress + 0.02);
+        targetProgress = 1;
+        currentProgress += (1 - currentProgress) * 0.055;
+        if (currentProgress > 0.99) currentProgress = 1;
         hasStartedScrolling = true;
+      } else {
+        currentProgress += (targetProgress - currentProgress) * 0.18;
       }
 
-      currentProgress += (targetProgress - currentProgress) * 0.18;
+      const angle = currentProgress * 88;
+      const transX = currentProgress * 28;
+      const gateOpacity = Math.max(0, 1 - Math.pow(currentProgress, 2) * 1.15);
 
-      if (duration > 0) {
-        seekTo(currentProgress * duration);
+      if (leftGateRef.current) {
+        leftGateRef.current.style.transform = `rotateY(-${angle}deg) translateX(-${transX}%)`;
+        leftGateRef.current.style.opacity = String(gateOpacity);
+      }
+      if (rightGateRef.current) {
+        rightGateRef.current.style.transform = `rotateY(${angle}deg) translateX(${transX}%)`;
+        rightGateRef.current.style.opacity = String(gateOpacity);
+      }
+      if (campusInnerRef.current) {
+        const scale = 1.02 + currentProgress * 0.18;
+        campusInnerRef.current.style.transform = `scale(${scale})`;
+      }
+      if (latchRef.current) {
+        const latchProg = clamp(currentProgress / 0.22, 0, 1);
+        latchRef.current.style.opacity = String(1 - latchProg);
+        latchRef.current.style.transform = `translate(-50%, -50%) scale(${1 + latchProg * 0.35})`;
       }
 
-      if (videoRef.current) {
-        const scale = 1 + currentProgress * 0.12;
-        videoRef.current.style.transform = `scale(${scale})`;
-      }
       if (titleRef.current) {
         const t = 1 - clamp(currentProgress / 0.35, 0, 1);
         titleRef.current.style.opacity = String(t);
-        titleRef.current.style.transform = `translateY(${(1 - t) * -24}px) scale(${0.96 + t * 0.04})`;
+        titleRef.current.style.transform = `translateY(${(1 - t) * -28}px) scale(${0.96 + t * 0.04})`;
         titleRef.current.style.filter = `blur(${(1 - t) * 10}px)`;
       }
       if (hintRef.current) {
         hintRef.current.style.opacity = (hasStartedScrolling || isAutoOpeningRef.current) ? "0" : "1";
       }
       if (taglineRef.current) {
-        const t = clamp((currentProgress - 0.65) / 0.35, 0, 1);
+        const t = clamp((currentProgress - 0.55) / 0.45, 0, 1);
         taglineRef.current.style.opacity = String(t);
         taglineRef.current.style.transform = `translateY(${(1 - t) * 18}px) scale(${0.96 + t * 0.04})`;
         taglineRef.current.style.filter = `blur(${(1 - t) * 8}px)`;
@@ -209,8 +194,6 @@ export default function MetroHero({
     }
 
     return () => {
-      video.removeEventListener("loadeddata", onLoadedData);
-      video.removeEventListener("seeked", onSeeked);
       window.removeEventListener("wheel", onWheel);
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchmove", onTouchMove);
@@ -239,34 +222,180 @@ export default function MetroHero({
         ...style,
       }}
     >
-      <video
-        ref={videoRef}
-        src={videoSrc}
-        muted
-        playsInline
-        preload="auto"
+      {/* 1. Behind the gate: Inside MIT ADT Campus Reveal (World Peace Dome & Grounds) */}
+      <div
+        ref={campusInnerRef}
         style={{
           position: "absolute",
           inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          opacity: ready ? 1 : 0,
+          zIndex: 1,
+          overflow: "hidden",
+          pointerEvents: "none",
           transformOrigin: "center center",
           willChange: "transform",
-          transition: "opacity 0.6s ease",
-          touchAction: "none",
-          pointerEvents: "none",
         }}
-      />
+      >
+        <img
+          src="/buildings/world_peace_dome.jpg"
+          alt="Inside MIT ADT Campus"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            filter: "brightness(0.92) contrast(1.08)",
+          }}
+        />
+        {/* Sunlight glow through open gate */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "radial-gradient(circle at 50% 40%, rgba(254, 240, 138, 0.28) 0%, rgba(37, 99, 235, 0.2) 55%, rgba(5, 7, 13, 0.8) 100%)",
+          }}
+        />
+      </div>
 
-      {/* Atmospheric overlay */}
+      {/* 2. 3D Gate Doors Stage */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          background: "linear-gradient(180deg, rgba(5,7,13,0.6), rgba(5,7,13,0.2) 30%, rgba(5,7,13,0.3) 70%, rgba(5,7,13,0.8))",
+          zIndex: 4,
+          perspective: "1400px",
+          perspectiveOrigin: "50% 50%",
+          overflow: "hidden",
           pointerEvents: "none",
+        }}
+      >
+        {/* Left Gate Door */}
+        <div
+          ref={leftGateRef}
+          style={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            width: "50%",
+            overflow: "hidden",
+            transformOrigin: "left center",
+            willChange: "transform, opacity",
+            borderRight: "1.5px solid rgba(245, 158, 11, 0.6)",
+            boxShadow: "8px 0 25px rgba(0,0,0,0.7)",
+          }}
+        >
+          <img
+            src="/buildings/mit_campus_gate.jpg"
+            alt="MIT ADT Campus Gate Left"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100vw",
+              height: "100vh",
+              maxWidth: "none",
+              objectFit: "cover",
+              pointerEvents: "none",
+              filter: "brightness(0.9) contrast(1.06)",
+            }}
+          />
+        </div>
+
+        {/* Right Gate Door */}
+        <div
+          ref={rightGateRef}
+          style={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            right: 0,
+            width: "50%",
+            overflow: "hidden",
+            transformOrigin: "right center",
+            willChange: "transform, opacity",
+            borderLeft: "1.5px solid rgba(245, 158, 11, 0.6)",
+            boxShadow: "-8px 0 25px rgba(0,0,0,0.7)",
+          }}
+        >
+          <img
+            src="/buildings/mit_campus_gate.jpg"
+            alt="MIT ADT Campus Gate Right"
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              width: "100vw",
+              height: "100vh",
+              maxWidth: "none",
+              objectFit: "cover",
+              pointerEvents: "none",
+              filter: "brightness(0.9) contrast(1.06)",
+            }}
+          />
+        </div>
+      </div>
+
+      {/* 3. Central Gate Emblem / Latch */}
+      <div
+        ref={latchRef}
+        onClick={handleEnterClick}
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: "52%",
+          transform: "translate(-50%, -50%)",
+          zIndex: 8,
+          cursor: "pointer",
+          pointerEvents: "auto",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          transition: "transform 0.2s ease",
+        }}
+        title="Click to Open Campus Gate"
+      >
+        <div
+          style={{
+            background: "radial-gradient(circle, #f59e0b 0%, #b45309 75%, #78350f 100%)",
+            border: "3px solid #fef3c7",
+            boxShadow: "0 0 30px rgba(245, 158, 11, 0.75), 0 8px 25px rgba(0,0,0,0.9)",
+            width: 64,
+            height: 64,
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#ffffff",
+          }}
+        >
+          {isOpening ? <Unlock size={28} /> : <Lock size={28} />}
+        </div>
+        <span
+          style={{
+            marginTop: "0.6rem",
+            background: "rgba(15, 23, 42, 0.9)",
+            border: "1px solid rgba(245, 158, 11, 0.6)",
+            color: "#fef3c7",
+            padding: "0.3rem 0.8rem",
+            borderRadius: "9999px",
+            fontSize: "0.75rem",
+            fontWeight: 800,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            boxShadow: "0 4px 15px rgba(0,0,0,0.6)",
+          }}
+        >
+          {isOpening ? "GATE OPENING..." : "CLICK TO OPEN GATE"}
+        </span>
+      </div>
+
+      {/* Atmospheric lighting overlay */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "linear-gradient(180deg, rgba(5,7,13,0.55), rgba(5,7,13,0.1) 30%, rgba(5,7,13,0.2) 70%, rgba(5,7,13,0.85))",
+          pointerEvents: "none",
+          zIndex: 6,
         }}
       />
 
@@ -275,25 +404,49 @@ export default function MetroHero({
         ref={titleRef}
         style={{
           position: "absolute",
-          inset: 0,
+          top: 0,
+          left: 0,
+          right: 0,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          padding: "0 6%",
+          paddingTop: "clamp(35px, 7vh, 75px)",
+          paddingLeft: "6%",
+          paddingRight: "6%",
           textAlign: "center",
           pointerEvents: "none",
+          zIndex: 7,
         }}
       >
+        <div style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          background: "rgba(15, 23, 42, 0.8)",
+          backdropFilter: "blur(8px)",
+          border: "1px solid rgba(245, 158, 11, 0.5)",
+          padding: "0.35rem 1rem",
+          borderRadius: "9999px",
+          color: "#fbbf24",
+          fontSize: "0.85rem",
+          fontWeight: 700,
+          letterSpacing: "0.15em",
+          textTransform: "uppercase",
+          marginBottom: "0.6rem",
+          boxShadow: "0 4px 15px rgba(0,0,0,0.5)"
+        }}>
+          <Sparkles size={15} /> Welcome to Rajbaug Campus
+        </div>
         <span
           style={{
             fontFamily: SANS,
             fontWeight: 800,
-            fontSize: "clamp(28px, 6.5vw, 84px)",
+            fontSize: "clamp(26px, 5.5vw, 68px)",
             lineHeight: 1.05,
             letterSpacing: "-0.02em",
             color: COL_TEXT,
-            textShadow: "0 4px 30px rgba(0,0,0,0.8)",
+            textShadow: "0 4px 30px rgba(0,0,0,0.9)",
             display: "inline-block",
             willChange: "transform, filter, opacity",
           }}
@@ -302,17 +455,17 @@ export default function MetroHero({
         </span>
         <span
           style={{
-            marginTop: "1.2rem",
+            marginTop: "0.8rem",
             fontFamily: SANS,
-            fontWeight: 600,
-            fontSize: "clamp(13px, 1.8vw, 20px)",
+            fontWeight: 700,
+            fontSize: "clamp(12px, 1.5vw, 16px)",
             color: "#60a5fa",
-            letterSpacing: "0.15em",
+            letterSpacing: "0.18em",
             textTransform: "uppercase",
-            textShadow: "0 2px 10px rgba(0,0,0,0.6)",
+            textShadow: "0 2px 10px rgba(0,0,0,0.8)",
           }}
         >
-          CLICK BELOW TO OPEN CAMPUS GATE & EXPLORE MAP
+          CLICK BELOW OR SCROLL TO SWING OPEN THE CAMPUS GATE
         </span>
       </div>
 
@@ -330,6 +483,7 @@ export default function MetroHero({
           textAlign: "center",
           opacity: 0,
           pointerEvents: "none",
+          zIndex: 12,
         }}
       >
         <div

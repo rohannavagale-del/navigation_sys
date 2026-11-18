@@ -64,10 +64,12 @@ export default function FloorPlanSvg({
 
   // Build SVG path string from route waypoints
   const getRouteSvgPath = () => {
-    if (!route || !route.waypoints || route.waypoints.length < 2) return '';
-    // If cross floor, only show waypoints for this active floor
-    let pts = route.waypoints;
+    if (!route) return '';
+
+    let pts = [];
+
     if (route.isCrossFloor) {
+      // Cross-floor route: show stage1 for start floor, stage2 for end floor
       if (route.startFloor === floor.id) {
         pts = route.stage1Waypoints || [];
       } else if (route.endFloor === floor.id) {
@@ -75,9 +77,13 @@ export default function FloorPlanSvg({
       } else {
         return '';
       }
+    } else {
+      // Same-floor route
+      pts = route.waypoints || [];
     }
+
     if (pts.length < 2) return '';
-    // SVG viewBox is 0 0 1000 600, scale x: 10, y: 6
+    // SVG viewBox is 0 0 1000 600, nodes use 0-100 percent coords: scale x*10, y*6
     return pts.map((pt, idx) => `${idx === 0 ? 'M' : 'L'} ${pt.x * 10} ${pt.y * 6}`).join(' ');
   };
 
@@ -342,8 +348,8 @@ export default function FloorPlanSvg({
                   </g>
                 )}
 
-                {/* Start & End Marker Pins on SVG */}
-                {route?.startRoom && (
+                {/* Start & End Marker Pins on SVG — only show on correct floor */}
+                {route?.startRoom && route.startRoom.floor === floor.id && (
                   <g transform={`translate(${route.startRoom.x * 10}, ${route.startRoom.y * 6 - 8})`}>
                     <circle r="14" fill="#10b981" />
                     <circle r="6" fill="#ffffff" />
@@ -351,7 +357,7 @@ export default function FloorPlanSvg({
                   </g>
                 )}
 
-                {route?.endRoom && (
+                {route?.endRoom && route.endRoom.floor === floor.id && (
                   <g transform={`translate(${route.endRoom.x * 10}, ${route.endRoom.y * 6 - 8})`}>
                     <circle r="14" fill="#ef4444" />
                     <circle r="6" fill="#ffffff" />

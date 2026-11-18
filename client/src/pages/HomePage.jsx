@@ -121,30 +121,33 @@ export default function HomePage({ onExploreMap, onOpenIndoor, searchQuery, setS
 
         <div className="building-gallery-grid">
           {[
-            { name: "MANET Institute Building", code: "MANET-01", tag: "Marine Engineering", img: "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&w=600&q=80" },
-            { name: "Workshop 1 - Heavy Machinery", code: "WS-01", tag: "Mechanical Bay", img: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80" },
-            { name: "Workshop 2 - Carpentry & Foundry", code: "WS-02", tag: "Pattern Shop", img: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=600&q=80" },
-            { name: "Workshop 3 - Welding & Smithy", code: "WS-03", tag: "Fabrication Lab", img: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=600&q=80" },
-            { name: "Workshop 4 - Automotive & EV", code: "WS-04", tag: "Electronics Bay", img: "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=600&q=80" },
-            { name: "Workshop 5 - Robotics & 3D Print", code: "WS-05", tag: "Mechatronics Lab", img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=600&q=80" },
-            { name: "Ship in Campus Mockup", code: "MANET-SHIP", tag: "Navigation Deck", img: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80" },
-            { name: "SOE & Film & TV Studios", code: "SOE-FTII", tag: "Engineering & Media", img: "https://images.unsplash.com/photo-1579165466741-7f35e4755660?auto=format&fit=crop&w=600&q=80" },
-            { name: "Vishwashanti Music Academy", code: "MUS-ACAD", tag: "Classical Performing", img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80" },
-            { name: "Art Gallery (AG)", code: "ART-GAL", tag: "Exhibitions & Fine Art", img: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=600&q=80" },
-            { name: "Engineering & IT Block – I", code: "EITB-01", tag: "School of Computing", img: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80" },
-            { name: "Engineering & IT Block – II", code: "EITB-02", tag: "Cyber Security & IoT", img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80" },
-            { name: "Academic Building – I", code: "AB-01", tag: "Undergraduate Wing", img: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=600&q=80" },
-            { name: "Academic Building – II", code: "AB-02", tag: "Postgraduate & Sciences", img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=600&q=80" },
-            { name: "Academic Building – III & Aud.", code: "AB-03", tag: "500-Seat Auditorium", img: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=600&q=80" },
-            { name: "Research Laboratory Building", code: "RES-LAB", tag: "Incubation Center", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80" },
-            { name: "School of Education", code: "SOE-EDU", tag: "Pedagogy Wing", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80" },
-            { name: "School of Vedic Science", code: "SVS-BLDG", tag: "IKS & Heritage", img: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=600&q=80" },
-            { name: "Raj Convocation Auditorium", code: "RAJ-AUD", tag: "Grand University Hall", img: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=600&q=80" }
+            { name: "MIT ADT Campus Main Gate", code: "GATE-MAIN", tag: "Main Entrance & Security", img: "/buildings/mit_campus_gate.jpg", cat: "Administrative" },
+            { name: "World Peace Dome", code: "MIT-DOME", tag: "World Heritage & Peace", img: "/buildings/world_peace_dome.jpg", cat: "Administrative" },
+            { name: "MANET Institute Building", code: "MANET-01", tag: "Marine Engineering", img: "/buildings/manet_building.jpg", cat: "Academic" },
+            { name: "School of Bioengineering Sciences & Research", code: "BIO-ENG", tag: "Biotech & Genomics Labs", img: "/buildings/bioengineering_building.jpg", cat: "Academic" },
+            { name: "MIT School of Food Technology", code: "FOOD-TECH", tag: "Food Engineering & Technology", img: "/buildings/food_technology_building.jpg", cat: "Academic" },
+            { name: "MIT Institute of Design (Design Building)", code: "MIT-ID", tag: "Design & UX/UI", img: "/buildings/design_building.jpg", cat: "Academic" },
+            { name: "Vishwashanti Sangeet Kala Academy", code: "MUS-ACAD", tag: "Classical Music & Arts", img: "/buildings/sangeet_kala_building.jpg", cat: "Academic" },
+            { name: "Workshop 1 - Heavy Machinery", code: "WS-01", tag: "Mechanical Bay", img: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80", cat: "Academic" },
+            { name: "Workshop 2 - Carpentry & Foundry", code: "WS-02", tag: "Pattern Shop", img: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=600&q=80", cat: "Academic" },
+            { name: "Workshop 3 - Welding & Smithy", code: "WS-03", tag: "Fabrication Lab", img: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=600&q=80", cat: "Academic" },
+            { name: "Workshop 4 - Automotive & EV", code: "WS-04", tag: "Electronics Bay", img: "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=600&q=80", cat: "Academic" },
+            { name: "Workshop 5 - Robotics & 3D Print", code: "WS-05", tag: "Mechatronics Lab", img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=600&q=80", cat: "Academic" },
+            { name: "Ship in Campus Mockup", code: "MANET-SHIP", tag: "Waterfront Training Deck", img: "/buildings/ship_in_campus.jpg", cat: "Academic" },
+            { name: "SOE & Film & TV Studios", code: "SOE-FTII", tag: "Engineering & Media", img: "/buildings/soe_ftii_building.jpg", cat: "Academic" },
+            { name: "Art Gallery (AG)", code: "ART-GAL", tag: "Exhibitions & Fine Art", img: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=600&q=80", cat: "Academic" },
+            { name: "Engineering & IT Block – I", code: "EITB-01", tag: "School of Computing", img: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80", cat: "Academic" },
+            { name: "Engineering & IT Block – II", code: "EITB-02", tag: "Cyber Security & IoT", img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80", cat: "Academic" },
+            { name: "Academic Building – II", code: "AB-02", tag: "Postgraduate & Sciences", img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=600&q=80", cat: "Academic" },
+            { name: "Academic Building – III & Aud.", code: "AB-03", tag: "500-Seat Auditorium", img: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=600&q=80", cat: "Academic" },
+            { name: "School of Education", code: "SOE-EDU", tag: "Pedagogy Wing", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80", cat: "Academic" },
+            { name: "School of Vedic Science", code: "SVS-BLDG", tag: "IKS & Heritage", img: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=600&q=80", cat: "Academic" },
+            { name: "Raj Convocation Auditorium", code: "RAJ-AUD", tag: "Grand University Hall", img: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=600&q=80", cat: "Academic" }
           ].map((bldg, idx) => (
             <div 
               key={idx} 
               className="building-gallery-card"
-              onClick={() => onExploreMap(bldg.name, 'Academic')}
+              onClick={() => onExploreMap(bldg.name, bldg.cat || 'Academic')}
             >
               <div className="building-gallery-img-wrapper">
                 <img src={bldg.img} alt={bldg.name} className="building-gallery-img" />

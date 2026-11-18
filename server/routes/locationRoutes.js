@@ -5,6 +5,18 @@ const router = express.Router();
 
 // Initial seed data for MIT ADT University Pune (Loni Kalbhor, Pune)
 const initialLocations = [
+  {
+    name: "MIT ADT Campus Main Entrance Gate",
+    code: "GATE-MAIN",
+    category: "Administrative",
+    description: "Grand ornamental main entrance gate and security checkpoint of MIT ADT University Rajbaug Campus, Solapur Road.",
+    lat: 18.4945,
+    lng: 74.0292,
+    openingHours: "Open 24/7 (Security Booth)",
+    floorCount: 1,
+    facilities: ["Security Post", "Visitor Registration", "Vehicle Tag Verification", "Campus Information Kiosk"],
+    image: "/buildings/mit_campus_gate.jpg"
+  },
   // 19 Academic Buildings
   {
     name: "MANET Institute Building",
@@ -16,7 +28,7 @@ const initialLocations = [
     openingHours: "6:00 AM - 7:00 PM",
     floorCount: 4,
     facilities: ["Ship Engine Simulator", "Naval Labs", "Parade Grounds", "Mess"],
-    image: "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&w=600&q=80"
+    image: "/buildings/manet_building.jpg"
   },
   {
     name: "Workshop – 1",
@@ -82,13 +94,13 @@ const initialLocations = [
     name: "Ship in Campus",
     code: "MANET-SHIP",
     category: "Academic",
-    description: "Life-size landlocked training ship mock-up for realistic maritime seamanship & navigation deck drills.",
+    description: "Life-size landlocked training ship mock-up and maritime seamanship waterfront training facility for realistic navigation & marine drills.",
     lat: 18.4938,
     lng: 74.0286,
     openingHours: "6:30 AM - 6:30 PM",
     floorCount: 3,
-    facilities: ["Navigation Bridge", "Engine Room Mockup", "Lifeboat Davits", "Radar Suite"],
-    image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80"
+    facilities: ["Navigation Bridge", "Engine Room Mockup", "Lifeboat Davits", "Radar Suite", "Waterfront Training"],
+    image: "/buildings/ship_in_campus.jpg"
   },
   {
     name: "MIT School of Engineering & Film and Television Institute Building",
@@ -100,10 +112,10 @@ const initialLocations = [
     openingHours: "8:00 AM - 8:00 PM",
     floorCount: 5,
     facilities: ["Sound Recording Studio", "Chroma Key Floor", "VFX Editing Suites", "Computer Labs"],
-    image: "https://images.unsplash.com/photo-1579165466741-7f35e4755660?auto=format&fit=crop&w=600&q=80"
+    image: "/buildings/soe_ftii_building.jpg"
   },
   {
-    name: "Music Academy",
+    name: "Vishwashanti Sangeet Kala Academy",
     code: "MUS-ACAD",
     category: "Academic",
     description: "Vishwashanti Sangeet Kala Academy building dedicated to classical music, vocal training, and instrumental performance.",
@@ -112,7 +124,7 @@ const initialLocations = [
     openingHours: "7:00 AM - 8:00 PM",
     floorCount: 3,
     facilities: ["Acoustic Practice Rooms", "Riyaz Halls", "Instruments Store", "Recital Chamber"],
-    image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80"
+    image: "/buildings/sangeet_kala_building.jpg"
   },
   {
     name: "Art Gallery (AG)",
@@ -151,16 +163,16 @@ const initialLocations = [
     image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80"
   },
   {
-    name: "Academic Building (AB) – I",
-    code: "AB-01",
+    name: "MIT School of Food Technology",
+    code: "FOOD-TECH",
     category: "Academic",
-    description: "Primary academic building AB-I featuring undergraduate lecture halls, departmental offices, and student affairs.",
+    description: "Premier institute building for Food Processing, Food Engineering & Technology, Sensory Evaluation labs, and Food Quality Analysis.",
     lat: 18.4890,
     lng: 74.0258,
     openingHours: "8:00 AM - 6:30 PM",
-    floorCount: 4,
-    facilities: ["Lecture Theaters", "Faculty Cabins", "Tutorial Rooms", "Wi-Fi Zone"],
-    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=600&q=80"
+    floorCount: 5,
+    facilities: ["Food Processing Pilot Plant", "Sensory Analysis Lab", "Microbiology Bay", "Food Chemistry Lab"],
+    image: "/buildings/food_technology_building.jpg"
   },
   {
     name: "Academic Building – II",
@@ -187,16 +199,16 @@ const initialLocations = [
     image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=600&q=80"
   },
   {
-    name: "Research Laboratory Building",
-    code: "RES-LAB",
+    name: "School of Bioengineering Sciences & Research",
+    code: "BIO-ENG",
     category: "Academic",
-    description: "Advanced interdisciplinary research facility housing incubation centers, patent desk, and clean energy labs.",
+    description: "MIT ADTU School of Bioengineering Sciences & Research housing biotechnology labs, biomedical research, bioinformatics and genomic incubation centers.",
     lat: 18.4910,
     lng: 74.0279,
-    openingHours: "8:00 AM - 9:00 PM",
-    floorCount: 4,
-    facilities: ["Incubation Center", "Clean Room", "Material Analytics Lab", "Patent Cell"],
-    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80"
+    openingHours: "8:00 AM - 8:00 PM",
+    floorCount: 5,
+    facilities: ["Biomedical Labs", "Bioinformatics Suite", "Tissue Culture Facility", "Genomics Incubation"],
+    image: "/buildings/bioengineering_building.jpg"
   },
   {
     name: "School of Education Building",
@@ -236,7 +248,7 @@ const initialLocations = [
   },
   // Additional Campus Landmark Buildings
   {
-    name: "Vishwashanti Sangeet Kala Academy & World Peace Dome",
+    name: "World Peace Dome (Vishwashanti Dome)",
     code: "MIT-DOME",
     category: "Administrative",
     description: "The world's largest dome & iconic landmark at MIT ADT Rajbaug Campus, overlooking the Mula-Mutha river.",
@@ -245,10 +257,10 @@ const initialLocations = [
     openingHours: "7:00 AM - 9:00 PM",
     floorCount: 5,
     facilities: ["World Peace Library", "Auditorium", "Vipassana Center", "River View Deck"],
-    image: "https://images.unsplash.com/photo-1564981797816-1043664bf78d?auto=format&fit=crop&w=600&q=80"
+    image: "/buildings/world_peace_dome.jpg"
   },
   {
-    name: "MIT Institute of Design (MIT ID)",
+    name: "MIT Institute of Design (Design Building)",
     code: "MIT-ID",
     category: "Academic",
     description: "Premier design institute campus housing Industrial Design, Communication, UX/UI, and Animation studios.",
@@ -257,7 +269,7 @@ const initialLocations = [
     openingHours: "8:00 AM - 8:00 PM",
     floorCount: 4,
     facilities: ["Prototype Workshop", "Mac Labs", "Design Exhibition Gallery", "Student Lounge"],
-    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=600&q=80"
+    image: "/buildings/design_building.jpg"
   },
   {
     name: "MIT ADT Central Knowledge Resource Center (Library)",
