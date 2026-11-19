@@ -148,7 +148,7 @@ const initialLocations = [
     openingHours: "8:00 AM - 7:00 PM",
     floorCount: 5,
     facilities: ["AI & DS Lab", "School of Computing Offices", "Server Room", "Smart Classrooms"],
-    image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80"
+    image: "/buildings/school_of_computing.jpg"
   },
   {
     name: "Engineering and Information Technology Block – II",
@@ -235,16 +235,16 @@ const initialLocations = [
     image: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=600&q=80"
   },
   {
-    name: "Raj Auditorium",
-    code: "RAJ-AUD",
+    name: "Urmila Tai Karad Auditorium",
+    code: "UTK-AUD",
     category: "Academic",
-    description: "Grand campus hall for university convocations, cultural festivals, guest lectures, and academic symposiums.",
+    description: "Grand architectural auditorium and university hall for convocations, cultural festivals, guest lectures, and academic symposiums (also known as Raj Auditorium).",
     lat: 18.4925,
     lng: 74.0262,
     openingHours: "8:00 AM - 9:00 PM",
     floorCount: 3,
     facilities: ["Acoustic Stage", "Green Rooms", "Balcony Seating", "Dolby Sound"],
-    image: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=600&q=80"
+    image: "/buildings/urmila_tai_karad_auditorium.jpg"
   },
   // Additional Campus Landmark Buildings
   {
